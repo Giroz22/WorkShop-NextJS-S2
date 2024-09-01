@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-RiwiAssesmentApplication<RiwiAssesment>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.example.RiwiAssesment.RiwiAssesmentApplication",
+      "projectName": "RiwiAssesment",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
