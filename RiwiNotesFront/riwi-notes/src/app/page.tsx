@@ -4,9 +4,9 @@ import { Button } from "@mui/base";
 import Note from "./components/Note";
 
 //Icons
-import AddIcon from "@mui/icons-material/Add";
 import { getAll, noteType } from "@/app/service/NoteService";
 import { useEffect, useState } from "react";
+import AddNote from "./components/AddNote";
 
 export default function Home() {
   const [dataNotes, setDataNotes] = useState<noteType[] | null>(null);
@@ -31,9 +31,7 @@ export default function Home() {
     <main className="w-full p-8 flex flex-col gap-8 items-center justify-center">
       <h1 className="text-2xl">My Notes</h1>
 
-      <Button className="rounded-full w-8 h-8 flex justify-center items-center bg-yellow-600 hover:scale-110 transition">
-        <AddIcon />
-      </Button>
+      <AddNote />
 
       <div className="w-full h-[70vh] flex flex-wrap justify-center gap-4 py-5 overflow-y-auto">
         {dataNotes === null ? (

@@ -5,29 +5,56 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useState } from "react";
 
 //Type
-import { noteType } from "@/app/service/NoteService";
+import { noteType, save, update } from "@/app/service/NoteService";
 
-interface modalPropsTypes {
-  dbDataNote: noteType;
+type modalPropsTypes = {
+  dbDataNote?: noteType;
   handleClose: () => void;
-}
+};
 
 export default function ModalNote({
-  dbDataNote,
+  dbDataNote = {
+    id: "",
+    title: "",
+    content: "",
+    createdAt: "",
+  },
   handleClose,
 }: modalPropsTypes) {
   const [dataNote, setDataNote] = useState(dbDataNote);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    if (dataNote.id.length == 0) {
+      console.log("Creating...");
+      //Create
+      await save(dataNote)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => setError(error))
+        .finally(() => setLoading(false));
+    } else {
+      console.log("Updating...");
+      //Update
+      await update(dataNote)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => setError(error))
+        .finally(() => setLoading(false));
+    }
+  };
 
   const handleBackBtn = () => {
     //Be close the modal
     handleClose();
 
     //Show data
-    if (dataNote != dbDataNote) {
+    if (dataNote != dbDataNote && dataNote.createdAt != "") {
       console.log("Sending to DB...");
-      dbDataNote = dataNote;
-    } else {
-      console.log("Don't sent to DB...");
+      fetchData();
     }
   };
 
