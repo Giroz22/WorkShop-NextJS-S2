@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-RiwiNotesApplication<RiwiNotes>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.RiwiNotes.RiwiNotesApplication",
+      "projectName": "RiwiNotes",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
