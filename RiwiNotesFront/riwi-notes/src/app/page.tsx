@@ -1,12 +1,16 @@
 "use client";
 
-import { Button } from "@mui/base";
 import Note from "./components/Note";
 
 //Icons
 import { getAll, noteType } from "@/app/service/NoteService";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import AddNote from "./components/AddNote";
+import { createContext } from "react";
+
+export const DataNoteContext = createContext<Dispatch<
+  SetStateAction<noteType[] | null>
+> | null>(null);
 
 export default function Home() {
   const [dataNotes, setDataNotes] = useState<noteType[] | null>(null);
@@ -28,22 +32,24 @@ export default function Home() {
   if (error) return <h1>Error: {error}</h1>;
 
   return (
-    <main className="w-full p-8 flex flex-col gap-8 items-center justify-center">
-      <h1 className="text-2xl">My Notes</h1>
+    <DataNoteContext.Provider value={setDataNotes}>
+      <main className="w-full p-8 flex flex-col gap-8 items-center justify-center">
+        <h1 className="text-2xl">My Notes</h1>
 
-      <AddNote />
+        <AddNote />
 
-      <div className="w-full h-[70vh] flex flex-wrap justify-center gap-4 py-5 overflow-y-auto">
-        {dataNotes === null ? (
-          <p className="text-2xl font-bold">No notes available</p>
-        ) : dataNotes.length === 0 ? (
-          <p className="text-2xl font-bold">Add a new note</p>
-        ) : (
-          dataNotes.map((note, index) => (
-            <Note key={note.title + index} {...note} />
-          ))
-        )}
-      </div>
-    </main>
+        <div className="w-full h-[70vh] flex flex-wrap justify-center gap-4 py-5 overflow-y-auto">
+          {dataNotes === null ? (
+            <p className="text-2xl font-bold">No notes available</p>
+          ) : dataNotes.length === 0 ? (
+            <p className="text-2xl font-bold">Add a new note</p>
+          ) : (
+            dataNotes.map((note, index) => (
+              <Note key={note.title + index} {...note} />
+            ))
+          )}
+        </div>
+      </main>
+    </DataNoteContext.Provider>
   );
 }
