@@ -9,7 +9,7 @@ export interface noteType {
 //URL
 const API_URL = "http://localhost:8080/api/v1/notes";
 
-// Implementación de la función getAll
+// GetAll
 export const getAll = async (): Promise<noteType[] | []> => {
   return await fetch(`${API_URL}`)
     .then((response) => {
@@ -27,4 +27,60 @@ export const getAll = async (): Promise<noteType[] | []> => {
       console.error(error);
       return [];
     });
+};
+
+//Save
+export const save = async (dataSave: noteType): Promise<noteType> => {
+  return await fetch(`${API_URL}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(dataSave),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(response.statusText);
+      return response.json();
+    })
+    .then((data) => data)
+    .catch((error) => {
+      console.error(`Message db: ${error}`);
+      alert("Error al guardar los datos");
+      return error;
+    });
+};
+
+//Update
+export const update = async (dataSave: noteType): Promise<noteType> => {
+  return await fetch(`${API_URL}/${dataSave.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(dataSave),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(response.statusText);
+      return response.json();
+    })
+    .then((data) => data)
+    .catch((error) => {
+      console.error(`Message db: ${error}`);
+      alert("Error al guardar los datos");
+      return error;
+    });
+};
+
+//Delete
+export const deleteNote = async (id: string) => {
+  return await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (!(response.status === 204)) throw new Error(response.statusText);
+    })
+    .catch((err) => err);
 };

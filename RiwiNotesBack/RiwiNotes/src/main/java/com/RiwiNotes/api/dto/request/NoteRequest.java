@@ -18,6 +18,6 @@ public class NoteRequest {
     @Size(min = 1, max = 100, message = "The title can't ber longer than 100 characters")
     private String title;
 
-    @NotBlank(message = "The content can't be void")
+    //@NotBlank(message = "The content can't be void")
     private String content;
 }
