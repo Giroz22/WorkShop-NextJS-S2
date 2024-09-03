@@ -70,3 +70,17 @@ export const update = async (dataSave: noteType): Promise<noteType> => {
       return error;
     });
 };
+
+//Delete
+export const deleteNote = async (id: string) => {
+  return await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (!(response.status === 204)) throw new Error(response.statusText);
+    })
+    .catch((err) => err);
+};
