@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "@mui/base/Button";
 
 //Icons
@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 //Type
 import { deleteNote, noteType, save, update } from "@/app/service/NoteService";
+import { DataNoteContext } from "../page";
 
 type modalPropsTypes = {
   dbDataNote?: noteType;
@@ -26,13 +27,19 @@ export default function ModalNote({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const setDataNotes = useContext(DataNoteContext);
+
   const fetchData = async () => {
     if (dataNote.id.length == 0) {
       console.log("Creating...");
       //Create
       await save(dataNote)
         .then((response) => {
-          console.log(response);
+          if (setDataNotes === null) return;
+
+          setDataNotes((notes) => {
+            return notes === null ? [response] : [...notes, response];
+          });
         })
         .catch((error) => setError(error))
         .finally(() => setLoading(false));
@@ -41,7 +48,13 @@ export default function ModalNote({
       //Update
       await update(dataNote)
         .then((response) => {
-          console.log(response);
+          if (setDataNotes === null) return;
+
+          setDataNotes((notes) => {
+            return notes === null
+              ? [response]
+              : notes.map((note) => (note.id == response.id ? response : note));
+          });
         })
         .catch((error) => setError(error))
         .finally(() => setLoading(false));
@@ -53,7 +66,13 @@ export default function ModalNote({
       .catch((err) => setError(err))
       .finally(() => {
         setLoading(false);
-        alert("The note was deleted successful");
+        if (setDataNotes === null) return;
+
+        setDataNotes((notes) => {
+          return notes === null
+            ? []
+            : notes.filter((note) => note.id != dataNote.id);
+        });
       });
   };
 
