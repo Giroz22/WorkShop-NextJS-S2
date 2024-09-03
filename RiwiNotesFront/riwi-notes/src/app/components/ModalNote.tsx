@@ -1,11 +1,12 @@
+import React, { useState } from "react";
 import { Button } from "@mui/base/Button";
 
 //Icons
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import React, { useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 //Type
-import { noteType, save, update } from "@/app/service/NoteService";
+import { deleteNote, noteType, save, update } from "@/app/service/NoteService";
 
 type modalPropsTypes = {
   dbDataNote?: noteType;
@@ -47,14 +48,32 @@ export default function ModalNote({
     }
   };
 
+  const fetchDelete = async () => {
+    await deleteNote(dataNote.id)
+      .catch((err) => setError(err))
+      .finally(() => {
+        setLoading(false);
+        alert("The note was deleted successful");
+      });
+  };
+
   const handleBackBtn = () => {
     //Be close the modal
     handleClose();
 
     //Show data
-    if (dataNote != dbDataNote && dataNote.createdAt != "") {
+    if (dataNote != dbDataNote) {
       console.log("Sending to DB...");
       fetchData();
+    }
+  };
+
+  const handleDeleteBtn = () => {
+    const deleteNote: boolean = confirm("You are sure of delete the note");
+
+    if (deleteNote) {
+      fetchDelete();
+      handleClose();
     }
   };
 
@@ -68,6 +87,11 @@ export default function ModalNote({
           <Button onClick={() => handleBackBtn()}>
             <ArrowBackIcon fontSize="large" className="hover:text-yellow-500" />
           </Button>
+          {dataNote.id && (
+            <Button onClick={() => handleDeleteBtn()}>
+              <DeleteIcon fontSize="large" className="hover:text-red-500" />
+            </Button>
+          )}
         </div>
         <div className="w-full h-full flex flex-col gap-2 py-6 px-4 rounded-md bg-neutral-600/95">
           <input
