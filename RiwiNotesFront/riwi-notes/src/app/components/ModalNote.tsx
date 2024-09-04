@@ -30,7 +30,7 @@ export default function ModalNote({
   const setDataNotes = useContext(DataNoteContext);
 
   const fetchData = async () => {
-    if (dataNote.id.length == 0) {
+    if (dataNote.id === "") {
       console.log("Creating...");
       //Create
       await save(dataNote)
@@ -82,8 +82,15 @@ export default function ModalNote({
 
     //Show data
     if (dataNote != dbDataNote) {
-      console.log("Sending to DB...");
-      fetchData();
+      if (
+        dataNote.title.trim().length != 0 ||
+        dataNote.content.trim().length != 0
+      ) {
+        console.log("Sending to DB...");
+        fetchData();
+      } else {
+        handleClose();
+      }
     }
   };
 

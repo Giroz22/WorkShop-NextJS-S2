@@ -17,15 +17,15 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await getAll()
-        .then((data) => setDataNotes(data))
-        .catch((error) => setError(error))
-        .finally(() => setLoading(false));
-    };
+  const getDataDB = async () => {
+    await getAll()
+      .then((data) => setDataNotes(data))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
+  };
 
-    fetchData();
+  useEffect(() => {
+    getDataDB();
   }, []);
 
   if (loading) return <h1>Loading...</h1>;
@@ -34,11 +34,13 @@ export default function Home() {
   return (
     <DataNoteContext.Provider value={setDataNotes}>
       <main className="w-full p-8 flex flex-col gap-8 items-center justify-center">
-        <h1 className="text-2xl">My Notes</h1>
+        <h1 className="text-3xl font-bold">
+          My <span className="text-yellow-500">Notes</span>
+        </h1>
 
         <AddNote />
 
-        <div className="w-full h-[70vh] flex flex-wrap justify-center gap-4 py-5 overflow-y-auto">
+        <div className="w-full max-h-[70vh] flex flex-wrap  justify-center gap-4 py-5 overflow-y-auto">
           {dataNotes === null ? (
             <p className="text-2xl font-bold">No notes available</p>
           ) : dataNotes.length === 0 ? (
